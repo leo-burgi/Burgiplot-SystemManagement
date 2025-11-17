@@ -102,7 +102,7 @@ namespace WebApplication1.Controllers
                 await _clienteService.CreateClienteAsync(cliente);
                 return RedirectToAction(nameof(Index));
             }
-            catch (InvalidOperationException ex) when (ex.Message== "DNI duplicado")
+            catch (InvalidOperationException ex) when (ex.Message== "Ya existe un cliente con este DNI.")
             {
                 ModelState.AddModelError(nameof(Cliente.DNI), "Ya existe un cliente con este DNI.");
                 return View(cliente);
@@ -163,6 +163,11 @@ namespace WebApplication1.Controllers
                 //await _context.SaveChangesAsync();
                 await _clienteService.UpdateClienteAsync(cliente);
                 return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex) when (ex.Message == "Ya existe un cliente con este DNI.")
+            {
+                ModelState.AddModelError(nameof(Cliente.DNI), "Ya existe un cliente con este DNI.");
+                return View(cliente);
             }
             catch (DbUpdateConcurrencyException)
             {

@@ -33,13 +33,31 @@ namespace WebApplication1.Services
         {
             return await _context.Clientes.FirstOrDefaultAsync(m => m.Id == id);
         }
+        private async Task<bool> DniDuplicadoAsync(string dni, int? excludeId = null)
+        {
+            var query = _context.Clientes.AsQueryable()
+                        .Where(c => c.DNI == dni);
+            if (excludeId.HasValue)
+            {
+                query = query.Where(c => c.Id != excludeId.Value);
+            }
+            return await query.AnyAsync();
+        }
         public async Task CreateClienteAsync(Cliente cliente)
         {
+            if (await DniDuplicadoAsync(cliente.DNI))
+            {
+                throw new InvalidOperationException("Ya existe un cliente con este DNI.");
+            }
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
         }
         public async Task UpdateClienteAsync(Cliente cliente)
         {
+            if (await DniDuplicadoAsync(cliente.DNI, cliente.Id))
+            {
+                throw new InvalidOperationException("Ya existe un cliente con este DNI.");
+            }
             _context.Clientes.Update(cliente);
             await _context.SaveChangesAsync();
         }
