@@ -15,14 +15,15 @@ namespace WebApplication1.Services
 
         public async Task<List<Cliente>> GetAllClientesAsync(string? searchString)
         {
-            var query = _context.Clientes.AsQueryable();
+            var query = _context.Clientes.AsNoTracking();
             if (!string.IsNullOrWhiteSpace(searchString))
             {
                 var s = searchString.Trim();
                 query = query.Where(c =>
-                    EF.Functions.Like(c.Nombre, $"%{s}%") ||
-                    EF.Functions.Like(c.Apellido, $"%{s}%") ||
-                    (c.Dirección != null && EF.Functions.Like(c.Dirección, $"%{s}%"))
+                    c.Nombre.StartsWith(s) ||
+                    c.Apellido.StartsWith(s) ||
+                    (c.Dirección != null && c.Dirección.StartsWith(s))
+
                 );
             }
             return await query.OrderBy(c => c.Apellido)
@@ -31,12 +32,11 @@ namespace WebApplication1.Services
         }
         public async Task<Cliente?> GetClienteByIdAsync(int id)
         {
-            return await _context.Clientes.FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Clientes.FindAsync(id);
         }
         private async Task<bool> DniDuplicadoAsync(string dni, int? excludeId = null)
         {
-            var query = _context.Clientes.AsQueryable()
-                        .Where(c => c.DNI == dni);
+            var query = _context.Clientes.Where(c => c.DNI == dni);
             if (excludeId.HasValue)
             {
                 query = query.Where(c => c.Id != excludeId.Value);
@@ -63,12 +63,8 @@ namespace WebApplication1.Services
         }
         public async Task DeleteClienteAsync(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente != null)
-            {
-                _context.Clientes.Remove(cliente);
-                await _context.SaveChangesAsync();
-            }
+            var rowsAffected = await _context.Clientes.Where(c=> c.Id ==id).ExecuteDeleteAsync();
+           
         }
     }
 }
