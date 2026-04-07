@@ -1,77 +1,47 @@
 @model IEnumerable<WebApplication1.Models.Material>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Stock de materiales";
 }
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Control de stock</h2>
+        <a asp-action="Create" class="btn btn-success">+ Nuevo material</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Codigo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Unidad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrecioStd)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAtUtc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAtUtc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RowVer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StockActual)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Codigo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Unidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioStd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAtUtc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAtUtc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RowVer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockActual)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @if (TempData["MaterialError"] is string error)
+    {
+        <div class="alert alert-warning">@error</div>
+    }
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Unidad</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.StockActual <= 5 ? "table-warning" : string.Empty)">
+                    <td>@item.Codigo</td>
+                    <td>@item.Descripcion</td>
+                    <td>@item.Unidad</td>
+                    <td>@item.PrecioStd?.ToString("C")</td>
+                    <td>@item.StockActual</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Detalle</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

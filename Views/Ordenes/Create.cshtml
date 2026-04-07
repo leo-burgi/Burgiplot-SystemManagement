@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.Orden
+@model WebApplication1.Models.Orden
 
 @{
     ViewData["Title"] = "Crear Orden";
@@ -6,34 +6,44 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card shadow rounded-4">
                 <div class="hero d-flex align-items-center bg-success text-white py-2 px-3 rounded mb-3 shadow-sm">
-                    <i class="bi bi-person-plus-fill fs-4 me-2"></i>
-                    <h4 class="mb-0 fw-bold">Crear Orden</h4>
+                    <h4 class="mb-0 fw-bold">Nueva orden de trabajo</h4>
                 </div>
                 <div class="card-body">
                     <form asp-action="Create">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                        <div class="mb-3">
-                            <label asp-for="ClienteId" class="control-label"></label>
-                            <select asp-for="ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
-                            <span asp-validation-for="ClienteId" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Observaciones" class="control-label"></label>
-                            <input asp-for="Observaciones" class="form-control" />
-                            <span asp-validation-for="Observaciones" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Total" class="control-label"></label>
-                            <input asp-for="Total" class="form-control" />
-                            <span asp-validation-for="Total" class="text-danger"></span>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="ClienteId" class="control-label"></label>
+                                <select asp-for="ClienteId" class="form-select" asp-items="ViewBag.ClienteId"></select>
+                                <span asp-validation-for="ClienteId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="FechaUtc" class="control-label"></label>
+                                <input asp-for="FechaUtc" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="FechaUtc" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Estado" class="control-label"></label>
+                                <select asp-for="Estado" class="form-select" asp-items="ViewBag.Estado"></select>
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Observaciones" class="control-label"></label>
+                                <input asp-for="Observaciones" class="form-control" placeholder="Ej: ploteo vinilo, polarizado, tazas personalizadas" />
+                                <span asp-validation-for="Observaciones" class="text-danger"></span>
+                            </div>
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Index" class="btn btn-accion btn-sm">← Volver</a>
-                            <button type="submit" class="btn btn-accion btn-sm btn-ver">Guardar</button>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+                            <button type="submit" class="btn btn-success">Guardar orden</button>
                         </div>
                     </form>
                 </div>
@@ -43,8 +53,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-

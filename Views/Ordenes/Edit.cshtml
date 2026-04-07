@@ -1,61 +1,46 @@
 @model WebApplication1.Models.Orden
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Orden";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <h2>Editar orden de trabajo</h2>
 
-<h4>Orden</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ClienteId" class="control-label"></label>
-                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
+    <form asp-action="Edit" class="mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="ClienteId" class="form-label"></label>
+                <select asp-for="ClienteId" class="form-select" asp-items="ViewBag.ClienteId"></select>
                 <span asp-validation-for="ClienteId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaUtc" class="control-label"></label>
-                <input asp-for="FechaUtc" class="form-control" />
+            <div class="col-md-6">
+                <label asp-for="FechaUtc" class="form-label"></label>
+                <input asp-for="FechaUtc" class="form-control" type="datetime-local" />
                 <span asp-validation-for="FechaUtc" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
+            <div class="col-md-6">
+                <label asp-for="Estado" class="form-label"></label>
+                <select asp-for="Estado" class="form-select" asp-items="ViewBag.Estado"></select>
                 <span asp-validation-for="Estado" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Observaciones" class="control-label"></label>
+            <div class="col-md-6">
+                <label asp-for="Observaciones" class="form-label"></label>
                 <input asp-for="Observaciones" class="form-control" />
                 <span asp-validation-for="Observaciones" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAtUtc" class="control-label"></label>
-                <input asp-for="CreatedAtUtc" class="form-control" />
-                <span asp-validation-for="CreatedAtUtc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAtUtc" class="control-label"></label>
-                <input asp-for="UpdatedAtUtc" class="form-control" />
-                <span asp-validation-for="UpdatedAtUtc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
