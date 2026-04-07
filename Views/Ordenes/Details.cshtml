@@ -1,66 +1,52 @@
 @model WebApplication1.Models.Orden
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle de Orden";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <h2>Orden #@Model.Id</h2>
+    <p><strong>Cliente:</strong> @Model.Cliente?.Nombre</p>
+    <p><strong>Estado:</strong> @Model.Estado</p>
+    <p><strong>Fecha:</strong> @Model.FechaUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+    <p><strong>Observaciones:</strong> @Model.Observaciones</p>
+    <p><strong>Total:</strong> @Model.Total.ToString("C")</p>
 
-<div>
-    <h4>Orden</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaUtc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaUtc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Observaciones)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Observaciones)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAtUtc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAtUtc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedAtUtc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedAtUtc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RowVer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RowVer)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Total)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Total)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cliente)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cliente.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <h4 class="mt-4">Consumos de materiales</h4>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Cantidad</th>
+                <th>Precio unit.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.OrdenItems.Any())
+            {
+                foreach (var item in Model.OrdenItems)
+                {
+                    <tr>
+                        <td>@item.Material.Descripcion</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.PrecioUnit.ToString("C")</td>
+                        <td>@((item.Cantidad * item.PrecioUnit).ToString("C"))</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-muted">No hay consumos cargados para esta orden.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2 mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar orden</a>
+        <a asp-controller="OrdenItems" asp-action="Create" class="btn btn-success">Agregar consumo</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+    </div>
 </div>
